@@ -122,7 +122,7 @@ export function ProductTable() {
         ),
         meta: {
           label: "Name",
-          placeholder: "Search names...",
+          placeholder: "Search from client...",
           variant: "text",
           icon: Text,
         },
@@ -145,7 +145,7 @@ export function ProductTable() {
         },
         meta: {
           label: "Category",
-          variant: "multiSelect",
+          variant: "select",
           options: [
             // This would ideally be populated dynamically from your categories
             { label: "Electronics", value: "electronics", icon: CheckCircle },
@@ -285,10 +285,7 @@ export function ProductTable() {
   return (
     <div className="data-table-container">
       <DataTable table={table}>
-        <DataTableToolbar
-          table={table}
-          searchPlaceholder="Search products..."
-        />
+        <DataTableToolbar table={table} searchPlaceholder="Search from DB..." />
       </DataTable>
     </div>
   );
