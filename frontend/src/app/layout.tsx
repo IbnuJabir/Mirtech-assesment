@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "High-Performance Data Table App",
+  title: "Mirtech Table - High-Performance Data Table App",
   description:
     "Explore and manage large datasets with our fast, responsive data table. Built for performance, supporting 100,000+ records with instant filtering, sorting, and pagination.",
   keywords: [
