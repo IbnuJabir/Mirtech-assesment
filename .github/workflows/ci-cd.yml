@@ -46,9 +46,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}
-            REDIS_HOST=redis
-            REDIS_PORT=6379
+            DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@ep-flat-sun-a1mv3ot5.ap-southeast-1.aws.neon.tech/${{ secrets.POSTGRES_DB }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=12329
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             POSTGRES_DB=${{ secrets.POSTGRES_DB }}
@@ -78,9 +79,10 @@ jobs:
                 ports:
                   - "8000:8000"
                 environment:
-                  - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-                  - REDIS_HOST=redis
-                  - REDIS_PORT=6379
+                  - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@ep-flat-sun-a1mv3ot5.ap-southeast-1.aws.neon.tech/${POSTGRES_DB}
+                  - REDIS_HOST={REDIS_HOST}
+                  - REDIS_PASSWORD={REDIS_PASSWORD}
+                  - REDIS_PORT=12329
                 depends_on:
                   - postgres
                   - redis
@@ -106,9 +108,13 @@ jobs:
             
             # Create .env file with secrets
             cat > .env << EOF
+            DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@ep-flat-sun-a1mv3ot5.ap-southeast-1.aws.neon.tech/${{ secrets.POSTGRES_DB }}
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=12329
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             EOF
             
             # Pull the latest image
