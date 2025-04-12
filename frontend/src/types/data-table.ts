@@ -3,21 +3,16 @@ import type { FilterItemSchema } from "@/lib/parsers";
 import type { ColumnSort, Row, RowData } from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {
-  // biome-ignore lint/correctness/noUnusedVariables: <explanation>
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   interface ColumnMeta<TData extends RowData, TValue> {
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     label?: string;
     placeholder?: string;
     variant?: FilterVariant;
-    options?: Array<{
-      label: string;
-      value: TValue;
-      count?: number;
-      icon?: React.FC<React.SVGProps<SVGSVGElement>>;
-    }>;
+    options?: Option[];
     range?: [number, number];
     unit?: string;
     icon?: React.FC<React.SVGProps<SVGSVGElement>>;
-    columnId?: keyof TData; // Optional: tie to column ID
   }
 }
 
