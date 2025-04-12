@@ -40,18 +40,19 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          secrets: |
-            "DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}"
-            "REDIS_HOST=redis"
-            "REDIS_PORT=6379"
-            "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
-            "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
-            "POSTGRES_DB=${{ secrets.POSTGRES_DB }}"
-            "POSTGRES_PORT=5432"
+          build-args: |
+            DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}
+            REDIS_HOST=redis
+            REDIS_PORT=6379
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_PORT=5432
 
   deploy:
     needs: build-and-push-image
