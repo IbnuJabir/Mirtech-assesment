@@ -8,7 +8,7 @@ Mirtech Table is a high-performance, full-stack e-commerce product dashboard des
 - **Backend API**: [HERE](https://api-mirtech.vercel.app)  
 - **Docker container**: [HERE](https://github.com/IbnuJabir/Mirtech-assesment/pkgs/container/mirtech-assesment)
 
----
+
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ Mirtech Table is a high-performance, full-stack e-commerce product dashboard des
 11. [Contributing](#contributing)
 12. [License](#license)
 
----
+
 
 ## Features
 
@@ -43,7 +43,7 @@ Mirtech Table is a high-performance, full-stack e-commerce product dashboard des
 - **SEO Optimized**: Next.js metadata improves search engine discoverability.
 - **Developer Experience**: Dockerized setup and clear documentation streamline onboarding.
 
----
+
 
 ## Tech Stack
 
@@ -67,7 +67,7 @@ Mirtech Table is a high-performance, full-stack e-commerce product dashboard des
   - Vercel: Hosting and CI/CD for frontend and backend.
   - pnpm: Efficient package management.
 
----
+
 
 ## Architecture Decisions
 
@@ -84,7 +84,7 @@ The Mirtech Table's architecture was designed to balance performance, scalabilit
 
 These choices prioritize **code quality**, **performance**, and **user experience**, addressing the evaluation criteria for robust full-stack development.
 
----
+
 
 ## Performance Optimizations
 
@@ -110,7 +110,7 @@ To handle a large dataset efficiently, the following optimizations were implemen
 
 These optimizations ensure **low latency**, **minimal resource usage**, and a **smooth experience** for large datasets, meeting the assessment’s performance criteria.
 
----
+
 
 ## UI/UX Considerations
 
@@ -141,119 +141,116 @@ The frontend prioritizes usability and accessibility, tailored to diverse users:
 
 These choices create a **polished, user-friendly interface**, aligning with the assessment’s UI/UX criteria.
 
----
+
 
 ## Project Structure
 
 ```
 mirtech-assesment/
-├── README.md
+├── README.md                          # Central documentation, detailing setup, architecture, and project overview for evaluators
 ├── backend
-│   ├── Dockerfile
-│   ├── app
-│   │   ├── __init__.py
-│   │   ├── api
-│   │   │   └── v1
-│   │   │       ├── __init__.py
-│   │   │       └── endpoints
-│   │   │           ├── __init__.py
-│   │   │           └── products.py
-│   │   ├── core
-│   │   │   ├── __init__.py
-│   │   │   ├── config.py
-│   │   │   └── dependencies.py
-│   │   ├── db
-│   │   │   ├── __init__.py
-│   │   │   └── base.py
-│   │   ├── main.py
-│   │   ├── models
-│   │   │   ├── __init__.py
-│   │   │   └── product.py
-│   │   └── schemas
-│   │       ├── __init__.py
-│   │       └── product.py
-│   ├── docker-compose.yml
-│   ├── requirements.txt
-│   ├── scripts
-│   │   ├── __init__.py
-│   │   └── seed_database.py
-│   └── vercel.json
+│   ├── Dockerfile                     # Defines containerized FastAPI environment for consistent deployment
+│   ├── app
+│   │   ├── __init__.py
+│   │   ├── api
+│   │   │   └── v1
+│   │   │       ├── __init__.py
+│   │   │       └── endpoints
+│   │   │           ├── __init__.py
+│   │   │           └── products.py     # Defines product-related API endpoints for filtering, sorting, and pagination
+│   │   ├── core
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py              # Manages FastAPI settings, including database and Redis configurations
+│   │   │   └── dependencies.py        # Provides shared dependencies (e.g., database sessions) for API routes
+│   │   ├── db
+│   │   │   ├── __init__.py
+│   │   │   └── base.py                # Initializes database connection and base models for SQLAlchemy
+│   │   ├── main.py                    # FastAPI entry point, sets up middleware (e.g., CORS) and API routers
+│   │   ├── models
+│   │   │   ├── __init__.py
+│   │   │   └── product.py             # Defines SQLAlchemy model for the product table
+│   │   ├── schemas
+│   │   │   ├── __init__.py
+│   │   │   └── product.py             # Specifies Pydantic schemas for product request/response validation
+│   │   └── schemas
+│   ├── docker-compose.yml             # Orchestrates backend services (FastAPI, Redis) for local development
+│   ├── requirements.txt               # Lists Python dependencies for reproducible backend setup
+│   ├── scripts
+│   │   ├── __init__.py
+│   │   └── seed_database.py           # Populates database with 100,000+ product records efficiently
+│   └── vercel.json                    # Configures Vercel for serverless backend deployment
 ├── docs
-│   └── assets
-│       └── mirtech.png
+│   └── assets
+│       └── mirtech.png                
 ├── frontend
-│   ├── README.md
-│   ├── components.json
-│   ├── eslint.config.mjs
-│   ├── next-env.d.ts
-│   ├── next.config.ts
-│   ├── package.json
-│   ├── pnpm-lock.yaml
-│   ├── postcss.config.mjs
-│   ├── public
-│   │   ├── file.svg
-│   │   ├── globe.svg
-│   │   ├── next.svg
-│   │   ├── vercel.svg
-│   │   └── window.svg
-│   ├── src
-│   │   ├── app
-│   │   │   ├── favicon.ico
-│   │   │   ├── globals.css
-│   │   │   ├── layout.tsx
-│   │   │   └── page.tsx
-│   │   ├── components
-│   │   │   ├── data-table-column-header.tsx
-│   │   │   ├── data-table-date-filter.tsx
-│   │   │   ├── data-table-faceted-filter.tsx
-│   │   │   ├── data-table-pagination.tsx
-│   │   │   ├── data-table-skeleton.tsx
-│   │   │   ├── data-table-slider-filter.tsx
-│   │   │   ├── data-table-toolbar.tsx
-│   │   │   ├── data-table-view-options.tsx
-│   │   │   ├── data-table.tsx
-│   │   │   ├── product-table-wrapper.tsx
-│   │   │   ├── product-table.tsx
-│   │   │   └── ui
-│   │   │       ├── badge.tsx
-│   │   │       ├── button.tsx
-│   │   │       ├── calendar.tsx
-│   │   │       ├── checkbox.tsx
-│   │   │       ├── command.tsx
-│   │   │       ├── dialog.tsx
-│   │   │       ├── dropdown-menu.tsx
-│   │   │       ├── input.tsx
-│   │   │       ├── label.tsx
-│   │   │       ├── popover.tsx
-│   │   │       ├── select.tsx
-│   │   │       ├── separator.tsx
-│   │   │       ├── skeleton.tsx
-│   │   │       ├── slider.tsx
-│   │   │       └── table.tsx
-│   │   ├── config
-│   │   │   └── data-table.ts
-│   │   ├── hooks
-│   │   │   ├── use-callback-ref.ts
-│   │   │   ├── use-data-table.ts
-│   │   │   └── use-debounced-callback.ts
-│   │   ├── lib
-│   │   │   ├── data-table.ts
-│   │   │   ├── format.ts
-│   │   │   ├── parsers.ts
-│   │   │   └── utils.ts
-│   │   ├── services
-│   │   │   └── product-service.ts
-│   │   └── types
-│   │       ├── data-table.ts
-│   │       └── product.ts
-│   └── tsconfig.json
+│   ├── README.md                     
+│   ├── components.json
+│   ├── eslint.config.mjs
+│   ├── next-env.d.ts
+│   ├── next.config.ts                
+│   ├── package.json                   
+│   ├── pnpm-lock.yaml
+│   ├── postcss.config.mjs
+│   ├── public
+│   │   ├── file.svg
+│   ├── src
+│   │   ├── app
+│   │   │   ├── favicon.ico
+│   │   │   ├── globals.css            
+│   │   │   ├── layout.tsx             # Defines root layout for Next.js app, including shared UI
+│   │   │   └── page.tsx               # Renders the homepage, hosting the product dashboard
+│   │   ├── components
+│   │   │   ├── data-table-column-header.tsx
+│   │   │   ├── data-table-date-filter.tsx
+│   │   │   ├── data-table-faceted-filter.tsx
+│   │   │   ├── data-table-pagination.tsx
+│   │   │   ├── data-table-skeleton.tsx
+│   │   │   ├── data-table-slider-filter.tsx
+│   │   │   ├── data-table-toolbar.tsx
+│   │   │   ├── data-table-view-options.tsx
+│   │   │   ├── data-table.tsx         # Core table component, powering filtering, sorting, and pagination
+│   │   │   ├── product-table-wrapper.tsx
+│   │   │   ├── product-table.tsx
+│   │   │   └── ui
+│   │   │       ├── badge.tsx
+│   │   │       ├── button.tsx
+│   │   │       ├── calendar.tsx
+│   │   │       ├── checkbox.tsx
+│   │   │       ├── command.tsx
+│   │   │       ├── dialog.tsx
+│   │   │       ├── dropdown-menu.tsx
+│   │   │       ├── input.tsx
+│   │   │       ├── label.tsx
+│   │   │       ├── popover.tsx
+│   │   │       ├── select.tsx
+│   │   │       ├── separator.tsx
+│   │   │       ├── skeleton.tsx
+│   │   │       ├── slider.tsx
+│   │   │       └── table.tsx
+│   │   ├── config
+│   │   │   └── data-table.ts          # Configures TanStack Table settings for the dashboard
+│   │   ├── hooks
+│   │   │   ├── use-callback-ref.ts
+│   │   │   ├── use-data-table.ts      # Custom hook for table state management
+│   │   │   └── use-debounced-callback.ts
+│   │   ├── lib
+│   │   │   ├── data-table.ts
+│   │   │   ├── format.ts
+│   │   │   ├── parsers.ts             # Parses URL filters for table interactions
+│   │   │   └── utils.ts
+│   │   ├── services
+│   │   │   └── product-service.ts     # Handles API calls to the backend for product data
+│   │   └── types
+│   │       ├── data-table.ts          # TypeScript types for table functionality
+│   │       └── product.ts             # TypeScript types for product data
+│   └── tsconfig.json                 
 └
 
 23 directories, 77 files
 
 ```
 
----
+
 
 ## Setup Instructions
 
@@ -345,7 +342,7 @@ mirtech-assesment/
    ```
    - Creates `products` table with 100,000+ records inside a database.
 
----
+
 
 ## API Overview
 
@@ -357,7 +354,7 @@ The backend exposes RESTful endpoints in `app/api/v1/endpoints/products.py`:
 
 CORS is configured (`app/main.py`) to allow requests from `https://mirtech.vercel.app` and `http://localhost:3000`.
 
----
+
 
 ## Deployment
 
@@ -375,7 +372,7 @@ CORS is configured (`app/main.py`) to allow requests from `https://mirtech.verce
   - Create a Neon project.
   - Update `backend/.env` with `DATABASE_URL`.
 
----
+
 
 ## Reflection
 
@@ -383,7 +380,7 @@ This assessment was an opportunity to build a performant, user-centric full-stac
 
 With more time, I would enhance the application by implementing automated end-to-end tests with Cypress to validate filtering and sorting workflows, improving fault tolerance with retry mechanisms for API calls, and polishing real-time search with debouncing for a smoother UX. Additionally, I’d explore database sharding for even larger datasets and integrate monitoring tools (e.g., Sentry) to track performance in production. These improvements would further elevate reliability and user satisfaction, aligning with modern full-stack best practices.
 
----
+
 
 ## Contributing
 
@@ -393,13 +390,13 @@ With more time, I would enhance the application by implementing automated end-to
 4. Push: `git push origin feature/your-feature`.
 5. Open a Pull Request.
 
----
+
 
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
 
----
+
 
 - **Author**: Kedir Jabir
 - **Portfolio**: [HERE](https://ibnujabir.tech)
