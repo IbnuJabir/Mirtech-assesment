@@ -140,19 +140,6 @@ export function DataTableToolbar<TData>({
 
   // Handle reset all filters
   const handleResetAll = useCallback(() => {
-    const params = new URLSearchParams();
-
-    // Keep other params that aren't filters
-    for (const [key, value] of Array.from(searchParams.entries())) {
-      if (!["search", "category", "page"].includes(key)) {
-        params.set(key, value);
-      }
-    }
-
-    // Reset to page 1
-    params.set("page", "1");
-
-    router.push(`${pathname}?${params.toString()}`);
     setSearchValue("");
     setSelectedCategory("");
     table.resetColumnFilters();
