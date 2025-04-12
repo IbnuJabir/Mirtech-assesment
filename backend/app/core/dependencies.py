@@ -14,7 +14,7 @@ def get_db():
 
 # Redis dependency
 def get_redis():
-    redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True)
+    redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True,  password=settings.REDIS_PASSWORD)
     try:
         yield redis_client
     finally:
