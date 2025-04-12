@@ -46,10 +46,7 @@ export function ProductTable() {
     "sort_order",
     parseAsString.withDefault("asc")
   );
-  const [search, setSearch] = useQueryState(
-    "search",
-    parseAsString.withDefault("")
-  );
+  const [search] = useQueryState("search", parseAsString.withDefault(""));
   const [category] = useQueryState(
     "category",
     parseAsArrayOf(parseAsString).withDefault([])
@@ -151,6 +148,8 @@ export function ProductTable() {
             { label: "Electronics", value: "electronics", icon: CheckCircle },
             { label: "Clothing", value: "clothing", icon: CheckCircle },
             { label: "Home", value: "home", icon: CheckCircle },
+            { label: "Books", value: "books", icon: CheckCircle },
+            { label: "Toys", value: "toys", icon: CheckCircle },
           ],
         },
         enableColumnFilter: true,

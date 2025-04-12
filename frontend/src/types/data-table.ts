@@ -8,10 +8,16 @@ declare module "@tanstack/react-table" {
     label?: string;
     placeholder?: string;
     variant?: FilterVariant;
-    options?: Option[];
+    options?: Array<{
+      label: string;
+      value: TValue;
+      count?: number;
+      icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+    }>;
     range?: [number, number];
     unit?: string;
     icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+    columnId?: keyof TData; // Optional: tie to column ID
   }
 }
 

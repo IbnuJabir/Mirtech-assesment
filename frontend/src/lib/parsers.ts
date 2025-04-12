@@ -13,7 +13,7 @@ const filterItemSchema = z.object({
 export type FilterItemSchema = z.infer<typeof filterItemSchema>;
 
 export type ExtendedColumnFilter<TData> = {
-  id: string;
+  id: keyof TData;
   value: string | string[];
   variant: (typeof dataTableConfig.filterVariants)[number];
   operator: (typeof dataTableConfig.operators)[number];

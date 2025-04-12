@@ -1,10 +1,12 @@
 "use client";
 
 import {
+  type Updater,
   type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
   type VisibilityState,
+  type PaginationState,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
@@ -64,7 +66,7 @@ export function useDataTable<TData, TValue>({
 
   // Handle pagination change
   const handlePaginationChange = React.useCallback(
-    (updaterOrValue: any) => {
+    (updaterOrValue: Updater<PaginationState>) => {
       if (manualPagination && onPaginationChange) {
         // If it's a function, call it with the current state to get the new value
         const newState =
@@ -89,7 +91,7 @@ export function useDataTable<TData, TValue>({
 
   // Handle sorting change
   const handleSortingChange = React.useCallback(
-    (updaterOrValue: any) => {
+    (updaterOrValue: Updater<SortingState>) => {
       if (manualSorting && onSortingChange) {
         // If it's a function, call it with the current state to get the new value
         const newSorting =
