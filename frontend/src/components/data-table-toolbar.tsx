@@ -82,7 +82,7 @@ export function DataTableToolbar<TData>({
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchValue(searchValue);
-    }, 100); // 100ms debounce delay
+    }, 500); // 500ms debounce delay
 
     return () => clearTimeout(timer);
   }, [searchValue]);
