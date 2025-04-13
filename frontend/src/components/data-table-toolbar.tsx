@@ -149,8 +149,8 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
-      <div className="flex flex-col w-full gap-2 md:flex-row md:items-center md:flex-wrap md:space-x-2">
-        <div className="relative w-full md:w-[250px] lg:w-[300px]">
+      <div className="flex flex-row flex-wrap w-full gap-2 items-start md:items-center md:space-x-2">
+        <div className="relative w-auto min-w-[200px] max-w-full md:w-[250px] lg:w-[300px]">
           <Input
             placeholder={searchPlaceholder}
             value={searchValue}
@@ -181,7 +181,7 @@ export function DataTableToolbar<TData>({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 border-dashed w-full md:w-auto"
+                className="h-9 border-dashed w-auto"
               >
                 <Filter className="mr-2 h-4 w-4" />
                 Category
@@ -256,7 +256,7 @@ export function DataTableToolbar<TData>({
           <Button
             variant="ghost"
             onClick={handleResetAll}
-            className="h-9 px-2 lg:px-3 w-full md:w-auto"
+            className="h-9 px-2 lg:px-3 w-auto"
           >
             Reset
             <X className="ml-2 h-4 w-4" />
@@ -288,7 +288,7 @@ function DataTableToolbarFilter<TData>({
             placeholder={columnMeta.placeholder ?? columnMeta.label}
             value={(column.getFilterValue() as string) ?? ""}
             onChange={(event) => column.setFilterValue(event.target.value)}
-            className="h-8 w-full md:w-40 lg:w-56"
+            className="h-8 w-auto min-w-[150px] md:w-40 lg:w-56"
           />
         );
 
@@ -302,7 +302,7 @@ function DataTableToolbarFilter<TData>({
               value={(column.getFilterValue() as string) ?? ""}
               onChange={(event) => column.setFilterValue(event.target.value)}
               className={cn(
-                "h-8 w-full md:w-[120px]",
+                "h-8 w-auto min-w-[100px] md:w-[120px]",
                 columnMeta.unit && "pr-8"
               )}
             />
