@@ -148,9 +148,9 @@ export function DataTableToolbar<TData>({
   const hasActiveFilters = !!searchValue || !!selectedCategory || isFiltered;
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center justify-between py-4">
-      <div className="flex flex-1 flex-wrap items-center space-x-2">
-        <div className="relative w-full sm:w-[250px] lg:w-[300px]">
+    <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col w-full gap-2 md:flex-row md:items-center md:flex-wrap md:space-x-2">
+        <div className="relative w-full md:w-[250px] lg:w-[300px]">
           <Input
             placeholder={searchPlaceholder}
             value={searchValue}
@@ -178,7 +178,11 @@ export function DataTableToolbar<TData>({
         {categories.length > 0 && (
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-9 border-dashed">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 border-dashed w-full md:w-auto"
+              >
                 <Filter className="mr-2 h-4 w-4" />
                 Category
                 {selectedCategory && (
@@ -252,7 +256,7 @@ export function DataTableToolbar<TData>({
           <Button
             variant="ghost"
             onClick={handleResetAll}
-            className="h-9 px-2 lg:px-3"
+            className="h-9 px-2 lg:px-3 w-full md:w-auto"
           >
             Reset
             <X className="ml-2 h-4 w-4" />
@@ -284,7 +288,7 @@ function DataTableToolbarFilter<TData>({
             placeholder={columnMeta.placeholder ?? columnMeta.label}
             value={(column.getFilterValue() as string) ?? ""}
             onChange={(event) => column.setFilterValue(event.target.value)}
-            className="h-8 w-40 lg:w-56"
+            className="h-8 w-full md:w-40 lg:w-56"
           />
         );
 
@@ -297,7 +301,10 @@ function DataTableToolbarFilter<TData>({
               placeholder={columnMeta.placeholder ?? columnMeta.label}
               value={(column.getFilterValue() as string) ?? ""}
               onChange={(event) => column.setFilterValue(event.target.value)}
-              className={cn("h-8 w-[120px]", columnMeta.unit && "pr-8")}
+              className={cn(
+                "h-8 w-full md:w-[120px]",
+                columnMeta.unit && "pr-8"
+              )}
             />
             {columnMeta.unit && (
               <span className="absolute top-0 right-0 bottom-0 flex items-center rounded-r-md bg-accent px-2 text-muted-foreground text-sm">
