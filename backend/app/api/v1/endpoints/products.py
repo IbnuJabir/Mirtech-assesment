@@ -69,9 +69,10 @@ async def get_products(
         # Try to get data from cache first
         cached_data = redis_client.get(cache_key)
         if cached_data:
+            print("redis Hits")
             cached_dict = json.loads(cached_data)
             return PaginatedProducts(**cached_dict)
-
+        print("redis misses")
         # Build database query
         stmt = select(Product)
         
