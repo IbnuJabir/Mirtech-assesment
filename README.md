@@ -267,7 +267,7 @@ mirtech-assesment/
 
 1. **Clone Repository**:
    ```bash
-   git clone https://github.com/your-repo/mirtech-assesment.git
+   git clone https://github.com/IbnuJabir/mirtech-assesment.git
    cd mirtech-assesment/backend
    ```
 
