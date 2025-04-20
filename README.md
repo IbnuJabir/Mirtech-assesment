@@ -2,7 +2,7 @@
 
 ![Mirtech Table Banner](./docs/assets/mirtech.png)
 
-Mirtech Table is a high-performance, full-stack e-commerce product dashboard designed to efficiently manage and display a large dataset of over 100,000 products. Built as a take-home assessment, it demonstrates a robust architecture balancing technical performance with an excellent user experience. The application features a **FastAPI** backend with a **Neon PostgreSQL** database, a **Next.js** frontend with TypeScript and TanStack Table, and a **Dockerized** deployment pipeline. It supports advanced filtering, sorting, pagination, and a fully responsive UI, optimized for scalability, usability, and maintainability.
+Mirtech Table is a high-performance, full-stack e-commerce product dashboard designed to efficiently manage and display a large dataset of over 100,000 products. Built as a take-home assessment, it demonstrates a robust architecture balancing technical performance with an excellent user experience. The application features a **FastAPI** backend with a **Supabase PostgreSQL** database, a **Next.js** frontend with TypeScript and TanStack Table, and a **Dockerized** deployment pipeline. It supports advanced filtering, sorting, pagination, and a fully responsive UI, optimized for scalability, usability, and maintainability.
 
 - **Live Demo**: [HERE](https://mirtech.vercel.app)  
 - **Backend API**: [HERE](https://api-mirtech.vercel.app)  
@@ -49,7 +49,7 @@ Mirtech Table is a high-performance, full-stack e-commerce product dashboard des
 
 - **Backend**:
   - FastAPI: High-performance Python API framework.
-  - Neon PostgreSQL: Scalable, serverless database.
+  - Supabase PostgreSQL: Scalable, serverless database.
   - SQLAlchemy: ORM for type-safe queries.
   - Pydantic: Data validation and serialization.
   - Redis: Caching for API performance.
@@ -73,9 +73,9 @@ Mirtech Table is a high-performance, full-stack e-commerce product dashboard des
 
 The Mirtech Table's architecture was designed to balance performance, scalability, and maintainability for a large dataset:
 
-- **Monorepo Structure**: Organizes `backend/` and `frontend/` in a single repository (`mirtech-assesment/`) for streamlined development and deployment, with clear separation of concerns.
+- **Monorepo like Structure**: Organizes `backend/` and `frontend/` in a single repository (`mirtech-assesment/`) for streamlined development and deployment, with clear separation of concerns.
 - **FastAPI Backend**: Chosen for its async capabilities, automatic OpenAPI docs, and performance, ideal for handling high-volume API requests.
-- **Neon PostgreSQL**: Selected over local Postgres for serverless scalability, eliminating infrastructure management while supporting 100,000+ records.
+- **Supabase PostgreSQL**: Selected over local Postgres for serverless scalability, eliminating infrastructure management while supporting 100,000+ records.
 - **SQLAlchemy with Pydantic**: Ensures type-safe database operations and API responses, reducing runtime errors.
 - **Next.js App Router**: Leverages SSR and SSG for SEO and performance, with client-side interactivity for the data table.
 - **TanStack Table**: Provides a flexible, performant table solution for complex filtering and sorting, minimizing custom state logic.
@@ -93,7 +93,7 @@ To handle a large dataset efficiently, the following optimizations were implemen
 - **Backend**:
   - **Database Indexing**: Indexes on `products(name, category, price)` (defined in database migrations) accelerate filtering and sorting queries.
   - **Redis Caching**: Caches API responses for 60 seconds (`app/core/config.py`), reducing database load for frequent requests.
-  - **Connection Pooling**: SQLAlchemy’s `pool_size=5` optimizes Neon connections, balancing throughput and resource usage.
+  - **Connection Pooling**: SQLAlchemy’s `pool_size=5` optimizes supabase connections, balancing throughput and resource usage.
   - **Async Endpoints**: FastAPI’s `async/await` in `app/api/v1/endpoints/products.py` minimizes blocking operations.
   - **Batch Inserts**: Bulk CSV imports via `\COPY` in `scripts/seed_database.py` for seeding 100,000+ records efficiently.
 
