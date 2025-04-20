@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from app.api.v1.endpoints import products
 from app.db.base import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.dependencies import redis_lifespan 
 
 app = FastAPI(
     title="Mirtech - High-Performance Data Table API",
     description="FastAPI backend for handling 100,000+ records",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=redis_lifespan
 )
 
 app.add_middleware(
