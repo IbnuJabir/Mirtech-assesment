@@ -38,7 +38,7 @@ async def redis_lifespan(app: FastAPI):
     print("Initializing Redis connection pool...")
     try:
         redis_pool = ConnectionPool.from_url(
-            f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/0",
+            f"redis://default:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}",
             host=settings.REDIS_HOST, 
             port=settings.REDIS_PORT, 
             password=settings.REDIS_PASSWORD,
