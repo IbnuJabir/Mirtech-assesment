@@ -1,28 +1,101 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from app.core.dependencies import get_db, get_redis
+from app.core.dependencies import get_async_db, get_redis
 from app.schemas.product import ProductQuery, PaginatedProducts, ProductOut
 from app.models.product import Product
-import redis
-import json
+from redis.asyncio import Redis
+import msgpack
 from datetime import datetime
-from typing import Dict, Any
+import asyncio
+from typing import Dict, Any, List, Optional, Tuple
 from pydantic import ValidationError
 
 router = APIRouter()
 
-# Helper to serialize objects correctly
-def json_serial(obj):
-    """JSON serializer for objects not serializable by default json code"""
+# Constants for cache configuration
+CACHE_TTL_SECONDS = 600
+CACHE_PREFIX = "products:"
+REDIS_TIMEOUT = 1.0  # 1 second timeout for Redis operations
+
+# Custom msgpack handlers for datetime objects
+def encode_datetime(obj):
     if isinstance(obj, datetime):
-        return obj.isoformat()
-    raise TypeError(f"Type {type(obj)} not serializable")
+        return {"__datetime__": True, "value": obj.isoformat()}
+    return obj
+
+def decode_datetime(obj):
+    if isinstance(obj, dict) and obj.get("__datetime__"):
+        return datetime.fromisoformat(obj["value"])
+    return obj
+
+async def check_redis_connection(redis_client: Redis) -> Tuple[bool, str]:
+    """Test if Redis connection is working"""
+    try:
+        await asyncio.wait_for(
+            redis_client.ping(),
+            timeout=REDIS_TIMEOUT
+        )
+        return True, "Connection successful"
+    except asyncio.TimeoutError:
+        return False, "Connection timeout"
+    except Exception as e:
+        return False, f"Connection error: {str(e) or type(e).__name__}"
+
+async def get_from_cache(redis_client: Redis, cache_key: str) -> Optional[bytes]:
+    """Get data from cache with timeout protection"""
+    try:
+        # Set a timeout for the Redis operation
+        return await asyncio.wait_for(
+            redis_client.get(cache_key),
+            timeout=REDIS_TIMEOUT
+        )
+    except asyncio.TimeoutError:
+        print("Redis get operation timed out")
+        return None
+    except Exception as e:
+        error_message = str(e) if str(e) else type(e).__name__
+        print(f"Redis get error: {error_message}")
+        return None
+
+async def set_to_cache(redis_client: Redis, cache_key: str, value: bytes, ttl: int) -> bool:
+    """Set data to cache with timeout protection"""
+    try:
+        # Log TTL validation
+        if not isinstance(ttl, int):
+            raise ValueError("TTL must be an integer (seconds)")
+        print(f"Setting data to cache: {cache_key} with TTL: {ttl} seconds")
+
+        # Log Redis client type and method type
+        print(f"Redis client set method: {type(redis_client.set)}")
+
+        # Check if redis_client.set is callable
+        if not callable(redis_client.set):
+            print(f"ERROR: redis_client.set is not callable! It is: {type(redis_client.set)}")
+            return False
+
+        # Set data to Redis cache with timeout protection
+        await asyncio.wait_for(
+            redis_client.set(cache_key, value, ex=ttl),
+            timeout=REDIS_TIMEOUT
+        )
+        print(f"Data successfully set to cache: {cache_key}")
+        return True
+
+    except asyncio.TimeoutError:
+        print("Redis set operation timed out")
+        return False
+    except Exception as e:
+        # Log detailed error message
+        print(f"Redis set error: {e}")
+        return False
 
 @router.get("/products", response_model=PaginatedProducts)
 async def get_products(
-    db: Session = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis),
+    request: Request,
+    response: Response,
+    db: AsyncSession = Depends(get_async_db),
+    redis_client: Redis = Depends(get_redis),
     page: int = 1,
     limit: int = 50,
     sort_by: str = "id",
@@ -32,14 +105,22 @@ async def get_products(
 ):
     """
     Get paginated list of products with optional filtering.
-    
-    - Supports pagination with page and limit parameters
-    - Allows sorting by field and direction
-    - Enables filtering by category
-    - Provides search functionality when available
-    - Results are cached for performance
     """
+    start_time = datetime.now()
+    use_cache = True
+    redis_available = False
+    
     try:
+        # Check if Redis is available
+        if use_cache:
+            is_connected, message = await check_redis_connection(redis_client)
+            if not is_connected:
+                print(f"Redis unavailable: {message}")
+                use_cache = False
+            else:
+                redis_available = True
+                print("Redis connection successful")
+        
         # Create and validate the query parameters
         try:
             query = ProductQuery(
@@ -51,7 +132,6 @@ async def get_products(
                 search=search
             )
         except ValidationError as e:
-            # Convert Pydantic validation errors to proper API errors
             error_details = []
             for error in e.errors():
                 field = error["loc"][0]
@@ -63,16 +143,31 @@ async def get_products(
                 detail=f"Invalid query parameters: {'; '.join(error_details)}"
             )
 
-        # Generate cache key from query parameters
-        cache_key = f"products:{query.json()}"
+        response.headers["X-Cache"] = "MISS"
+        response.headers["X-Redis-Available"] = str(redis_available)
         
         # Try to get data from cache first
-        cached_data = redis_client.get(cache_key)
-        if cached_data:
-            print("redis Hits")
-            cached_dict = json.loads(cached_data)
-            return PaginatedProducts(**cached_dict)
-        print("redis misses")
+        if use_cache:
+            # Generate cache key
+            cache_key = f"{CACHE_PREFIX}{query.json()}"
+            cached_data = await get_from_cache(redis_client, cache_key)
+            
+            if cached_data:
+                try:
+                    # Try to deserialize with msgpack
+                    unpacked_data = msgpack.unpackb(cached_data, object_hook=decode_datetime)
+                    result = PaginatedProducts.model_validate(unpacked_data)
+                    response.headers["X-Cache"] = "HIT"
+                    
+                    # Add timing information
+                    process_time = (datetime.now() - start_time).total_seconds() * 1000
+                    response.headers["X-Process-Time-Ms"] = f"{process_time:.2f}"
+                    
+                    return result
+                except Exception as e:
+                    print(f"Cache deserialization error: {str(e) or type(e).__name__}")
+                    # Continue to fetch from DB on deserialization error
+        
         # Build database query
         stmt = select(Product)
         
@@ -101,71 +196,76 @@ async def get_products(
             stmt = stmt.order_by(Product.id.asc())
             
         # Get total count for pagination metadata
-        count_stmt = _build_count_query(query)
-        total_count = db.execute(count_stmt).scalar()
-
+        count_stmt = select(func.count()).select_from(Product)
+        if query.category:
+            count_stmt = count_stmt.where(Product.category == query.category)
+        if query.search:
+            try:
+                count_stmt = count_stmt.where(Product.search_vector.match(query.search))
+            except AttributeError:
+                count_stmt = count_stmt.where(Product.name.ilike(f"%{query.search}%"))
+        
+        # Execute count query
+        result = await db.execute(count_stmt)
+        total_count = result.scalar()
+        
         # Apply pagination
         offset = (query.page - 1) * query.limit
         stmt = stmt.offset(offset).limit(query.limit)
         
         # Execute query
-        products = db.execute(stmt).scalars().all()
-
+        result = await db.execute(stmt)
+        products = result.scalars().all()
+        
         # Prepare response
-        response_data = _prepare_response(products, total_count, query)
+        try:
+            product_data = [ProductOut.from_orm(product).dict() for product in products]
+        except AttributeError:
+            product_data = [ProductOut.model_validate(product).model_dump() for product in products]
         
-        # Cache result for 10 minutes (600 seconds)
-        redis_client.setex(
-            cache_key, 
-            600, 
-            json.dumps(response_data, default=json_serial)
-        )
+        response_data = {
+            "data": product_data,
+            "total_count": total_count,
+            "page": query.page,
+            "limit": query.limit
+        }
         
-        return PaginatedProducts(**response_data)
-
-    except redis.exceptions.RedisError as e:
-        # Log the error here
-        raise HTTPException(
-            status_code=503, 
-            detail="Cache service unavailable. Please try again later."
-        )
-    except HTTPException:
-        # Re-raise HTTP exceptions as-is
-        raise
+        # Try to cache result if caching is enabled
+        if use_cache:
+            try:
+                # Use custom handler for datetime objects
+                serialized_data = msgpack.packb(response_data, default=encode_datetime)
+                # Cache asynchronously without waiting for result
+                asyncio.create_task(set_to_cache(
+                    redis_client, 
+                    cache_key, 
+                    serialized_data,
+                    CACHE_TTL_SECONDS
+                ))
+            except Exception as e:
+                error_message = str(e) if str(e) else type(e).__name__
+                print(f"Error serializing cache data: {error_message}")
+                # Continue without caching on error
+        
+        result = PaginatedProducts(**response_data)
+        
+        # Add timing information
+        process_time = (datetime.now() - start_time).total_seconds() * 1000
+        response.headers["X-Process-Time-Ms"] = f"{process_time:.2f}"
+        
+        return result
+        
     except Exception as e:
-        # Log the error here with full traceback
+        # Log the error
+        error_message = str(e) if str(e) else type(e).__name__
+        print(f"ERROR: {error_message}")
+        import traceback
+        traceback.print_exc()
+        
+        if isinstance(e, HTTPException):
+            raise
+        
         raise HTTPException(
             status_code=500, 
-            detail=f"An unexpected error occurred while processing your request: {str(e)}"
+            detail="An unexpected error occurred while processing your request"
         )
-
-def _build_count_query(query: ProductQuery):
-    """Build a query to count total matching products"""
-    count_stmt = select(func.count()).select_from(Product)
-    
-    if query.category:
-        count_stmt = count_stmt.where(Product.category == query.category)
-        
-    if query.search:
-        try:
-            count_stmt = count_stmt.where(Product.search_vector.match(query.search))
-        except AttributeError:
-            count_stmt = count_stmt.where(Product.name.ilike(f"%{query.search}%"))
-            
-    return count_stmt
-
-def _prepare_response(products, total_count: int, query: ProductQuery) -> Dict[str, Any]:
-    """Prepare the response data structure"""
-    try:
-        # Try Pydantic v1 method first
-        product_data = [ProductOut.from_orm(product).dict() for product in products]
-    except AttributeError:
-        # Fall back to Pydantic v2 method
-        product_data = [ProductOut.model_validate(product).model_dump() for product in products]
-    
-    return {
-        "data": product_data,
-        "total_count": total_count,
-        "page": query.page,
-        "limit": query.limit
-    }
