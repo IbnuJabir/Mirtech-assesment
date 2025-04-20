@@ -39,7 +39,7 @@ async def redis_lifespan(app: FastAPI):
     try:
         redis_pool = ConnectionPool.from_url(
             f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/0",
-            decode_responses=False,
+            decode_responses=True,
             max_connections=20
         )
         # Test the connection
