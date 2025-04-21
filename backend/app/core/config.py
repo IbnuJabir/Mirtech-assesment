@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     REDIS_HOST: str = os.getenv("REDIS_HOST")
     REDIS_PORT: int = int(os.getenv("REDIS_PORT"))
     REDIS_PASSWORD: str = os.getenv("REDIS_PASSWORD", None)
+    REDIS_URL: str = os.getenv("REDIS_URL")
     
     # Database connection pool settings
     DATABASE_POOL_SIZE: int = int(os.getenv("DATABASE_POOL_SIZE", "20"))

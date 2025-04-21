@@ -37,9 +37,11 @@ async def redis_lifespan(app: FastAPI):
     global redis_pool
     print("Initializing Redis connection pool...")
     try:
-        redis_pool = ConnectionPool.from_url(f"redis://default:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}")
+        # redis_pool = ConnectionPool.from_url(f"redis://default:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}")
+        redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
         # Test the connection
         client = AsyncRedis(connection_pool=redis_pool)
+        # client = AsyncRedis.from_pool(redis_pool)
         await client.ping()
         print("Redis connection pool created and connection successful.")
     except Exception as e:
