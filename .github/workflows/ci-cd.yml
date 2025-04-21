@@ -80,9 +80,9 @@ jobs:
                   - "8000:8000"
                 environment:
                   - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}
-                  - REDIS_HOST={REDIS_HOST}
-                  - REDIS_PASSWORD={REDIS_PASSWORD}
-                  - REDIS_PORT={REDIS_PORT}
+                  - REDIS_HOST=${REDIS_HOST}
+                  - REDIS_PASSWORD=${REDIS_PASSWORD}
+                  - REDIS_PORT=${REDIS_PORT}
                 depends_on:
                   - postgres
                   - redis
