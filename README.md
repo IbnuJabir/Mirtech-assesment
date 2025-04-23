@@ -394,7 +394,7 @@ With more time, I would enhance the application by implementing automated end-to
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License.
 
 
 
