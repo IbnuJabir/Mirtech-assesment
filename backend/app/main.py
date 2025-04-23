@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from app.api.v1.endpoints import products
-from app.db.base import Base, engine
+from app.db.base import Base, engine, async_engine
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.dependencies import redis_lifespan 
+from app.core.dependencies import redis_lifespan
+from app.models.product import Product
+import asyncio
 
 app = FastAPI(
     title="Mirtech - High-Performance Data Table API",
@@ -21,6 +23,13 @@ app.add_middleware(
 
 # Create tables
 Base.metadata.create_all(bind=engine)
+
+# Initialize database optimizations
+@app.on_event("startup")
+async def setup_database():
+    # Create full-text search indexes
+    await Product.create_text_search_index(async_engine)
+    print("Database optimizations applied")
 
 app.include_router(products.router, prefix="/api/v1", tags=["products"])
 
