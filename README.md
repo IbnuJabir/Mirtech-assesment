@@ -5,7 +5,7 @@
 Mirtech Table is a high-performance, full-stack e-commerce product dashboard designed to efficiently manage and display a large dataset of over 100,000 products. Built as a take-home assessment, it demonstrates a robust architecture balancing technical performance with an excellent user experience. The application features a **FastAPI** backend with a **Supabase PostgreSQL** database, a **Next.js** frontend with TypeScript and TanStack Table, and a **Dockerized** deployment pipeline. It supports advanced filtering, sorting, pagination, and a fully responsive UI, optimized for scalability, usability, and maintainability.
 
 - **Live Demo**: [HERE](https://mirtech.vercel.app)  
-- **Backend API**: [HERE](https://mirtechapi.ibnujabir.tech)  
+- **Backend API**: [HERE](https://mirtech-api.happybush-0ebea5b8.eastus.azurecontainerapps.io)  
 - **Docker container**: [HERE](https://github.com/IbnuJabir/Mirtech-assesment/pkgs/container/mirtech-assesment)
 
 
