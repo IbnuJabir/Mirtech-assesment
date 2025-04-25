@@ -8,15 +8,19 @@ colorama==0.4.6
 Faker==24.0.0
 fastapi==0.110.0
 greenlet==3.1.1
+gunicorn==23.0.0
 h11==0.14.0
+httptools==0.6.4
 idna==3.10
 msgpack==1.1.0
+packaging==25.0
 psycopg2-binary==2.9.9
 pydantic==2.6.4
 pydantic-settings==2.2.1
 pydantic_core==2.16.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
+PyYAML==6.0.2
 redis==5.0.3
 setuptools==78.1.1
 six==1.17.0
@@ -27,3 +31,6 @@ typing-inspection==0.4.0
 typing_extensions==4.13.1
 tzdata==2025.2
 uvicorn==0.29.0
+uvloop==0.21.0
+watchfiles==1.0.5
+websockets==15.0.1
