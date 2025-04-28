@@ -117,12 +117,12 @@ export function ProductTable() {
         cell: ({ cell }) => (
           <div className="font-medium">{cell.getValue<string>()}</div>
         ),
-        meta: {
-          label: "Name",
-          placeholder: "Search from client...",
-          variant: "text",
-          icon: Text,
-        },
+        // meta: {
+        //   label: "Name",
+        //   placeholder: "Search from client...",
+        //   variant: "text",
+        //   icon: Text,
+        // },
         enableColumnFilter: true,
       },
       {
@@ -284,7 +284,7 @@ export function ProductTable() {
   return (
     <div className="data-table-container">
       <DataTable table={table}>
-        <DataTableToolbar table={table} searchPlaceholder="Search from DB..." />
+        <DataTableToolbar table={table} searchPlaceholder="Search ..." />
       </DataTable>
     </div>
   );

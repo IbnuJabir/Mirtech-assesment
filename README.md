@@ -257,7 +257,7 @@ mirtech-assesment/
 ### Prerequisites
 
 - **Node.js**: v20+ (for frontend)
-- **Python**: 3.11+ (for backend)
+- **Python**: 3.12+ (for backend)
 - **Docker**: Latest (for containerized setup)
 - **pnpm**: v8+ (install: `npm install -g pnpm`)
 - **Git**: For cloning the repo
