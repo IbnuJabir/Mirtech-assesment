@@ -23,7 +23,6 @@ import {
   MoreHorizontal,
   ShoppingCart,
   Tag,
-  Text,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
