@@ -117,7 +117,7 @@ export function ProductTable() {
         cell: ({ cell }) => (
           <div className="font-medium">{cell.getValue<string>()}</div>
         ),
-        enableColumnFilter: true,
+        enableColumnFilter: true
       },
       {
         id: "category",
