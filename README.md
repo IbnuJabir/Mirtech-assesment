@@ -2,10 +2,9 @@
 
 ![Mirtech Table Banner](./docs/assets/mirtech.png)
 
-Mirtech Table is a high-performance, full-stack e-commerce product dashboard designed to efficiently manage and display a large dataset of over 100,000 products. Built as a take-home assessment, it demonstrates a robust architecture balancing technical performance with an excellent user experience. The application features a **FastAPI** backend with a **Supabase PostgreSQL** database, a **Next.js** frontend with TypeScript and TanStack Table, and a **Dockerized** deployment pipeline. It supports advanced filtering, sorting, pagination, and a fully responsive UI, optimized for scalability, usability, and maintainability.
+Mirtech Table is a high-performance, full-stack e-commerce product dashboard designed to efficiently manage and display a large dataset of over 100,000 products. it demonstrates a robust architecture balancing technical performance with an excellent user experience. The application features a **FastAPI** backend with a **Supabase PostgreSQL** database, a **Next.js** frontend with TypeScript and TanStack Table, and a **Dockerized** deployment pipeline. It supports advanced filtering, sorting, pagination, and a fully responsive UI, optimized for scalability, usability, and maintainability.
 
 - **Live Demo**: [HERE](https://mirtech.vercel.app)  
-- **Backend API**: [HERE](https://mirtech-api.happybush-0ebea5b8.eastus.azurecontainerapps.io)  
 - **Docker container**: [HERE](https://github.com/IbnuJabir/Mirtech-assesment/pkgs/container/mirtech-assesment)
 
 
@@ -371,14 +370,6 @@ CORS is configured (`app/main.py`) to allow requests from `https://mirtech.verce
 - **Neon Database**:
   - Create a Neon project.
   - Update `backend/.env` with `DATABASE_URL`.
-
-
-
-## Reflection
-
-This assessment was an opportunity to build a performant, user-centric full-stack application under constrained timelines. I’m proud of achieving a scalable architecture with FastAPI and Redis, a responsive UI with Next.js and TanStack Table, and a streamlined Docker/Vercel pipeline. Key successes include handling 100,000+ records with optimized queries and caching, and delivering a polished UI with accessibility features. TypeScript’s strict typing and Tailwind’s utilities accelerated development while ensuring quality.
-
-With more time, I would enhance the application by implementing automated end-to-end tests with Cypress to validate filtering and sorting workflows, improving fault tolerance with retry mechanisms for API calls, and polishing real-time search with debouncing for a smoother UX. Additionally, I’d explore database sharding for even larger datasets and integrate monitoring tools (e.g., Sentry) to track performance in production. These improvements would further elevate reliability and user satisfaction, aligning with modern full-stack best practices.
 
 
 
